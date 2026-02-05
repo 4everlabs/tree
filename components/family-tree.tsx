@@ -199,6 +199,7 @@ export function FamilyTree({
       if (sortedParentEntries.length > 1) {
         const leftParent = sortedParentEntries[0];
         const rightParent = sortedParentEntries[1];
+        if (!leftParent || !rightParent) return;
         const leftAnchor = sideInner(leftParent.rect, "right");
         const rightAnchor = sideInner(rightParent.rect, "left");
         addLine(
@@ -212,7 +213,9 @@ export function FamilyTree({
           y: leftAnchor.y,
         };
       } else {
-        const parentRect = sortedParentEntries[0].rect;
+        const parentEntry = sortedParentEntries[0];
+        if (!parentEntry) return;
+        const parentRect = parentEntry.rect;
         junction = {
           x: parentRect.left + parentRect.width / 2,
           y: parentRect.bottom,
@@ -315,7 +318,7 @@ export function FamilyTree({
   });
 
   useEffect(() => {
-    setDialogState((prev) =>
+    setDialogState((prev: { isOpen: boolean; relation: RelationType; parentId: string }) =>
       prev.isOpen ? prev : { ...prev, parentId: rootMember.id },
     );
   }, [rootMember.id]);
