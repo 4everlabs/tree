@@ -90,7 +90,7 @@ export function FamilyTree({
   resolveAvatarUrl,
   designPreset = "default",
   designOverrides,
-}: FamilyTreeProps) {
+}: FamilyTreeProps): JSX.Element {
   const connectorConfig = useMemo(
     () => getFamilyTreeConfig(designPreset, designOverrides),
     [designPreset, designOverrides],

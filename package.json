@@ -46,5 +46,8 @@
     "react-dom": "^18 || ^19",
     "lucide-react": ">=0.300.0",
     "typescript": "^5"
+  },
+  "dependencies": {
+    "@std/log": "npm:@jsr/std__log"
   }
 }

@@ -37,7 +37,7 @@ export function FamilyNodeCard({
   resolveAvatarUrl,
   isRoot,
   canEdit = true,
-}: FamilyNodeCardProps) {
+}: FamilyNodeCardProps): JSX.Element {
   const [isHovered, setIsHovered] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [menuCoords, setMenuCoords] = useState<{ top: number; left: number } | null>(null);

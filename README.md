@@ -12,6 +12,16 @@ bun add @4everlabs/tree
 npm install @4everlabs/tree
 ```
 
+## Publish (JSR + Bun)
+
+Configure `jsr.json` with `name`, `version`, `license`, and `exports`, then publish:
+
+```bash
+bunx jsr publish
+```
+
+If the CLI asks for a token, create one in the JSR web UI and pass it via `--token` or `JSR_TOKEN`.
+
 ## Quick Start
 
 ```tsx
