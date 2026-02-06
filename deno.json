@@ -1,0 +1,16 @@
+{
+  "name": "@4everlabs/tree",
+  "version": "0.1.0",
+  "exports": "./mod.ts",
+  "nodeModulesDir": "auto",
+  "imports": {
+    "react": "npm:react@19.0.0",
+    "react-dom": "npm:react-dom@19.0.0",
+    "react/jsx-runtime": "npm:react@19.0.0/jsx-runtime",
+    "lucide-react": "npm:lucide-react@0.300.0"
+  },
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "react"
+  }
+}
