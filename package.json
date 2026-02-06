@@ -1,6 +1,6 @@
 {
   "name": "@4everlabs/tree",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Family tree UI components with relationship-aware connectors.",
   "keywords": [
     "family-tree",

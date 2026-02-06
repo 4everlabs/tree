@@ -1,26 +1,16 @@
 # 4ever Tree
 
-React components for rendering interactive family trees with relationship-aware connectors. Data fetching and persistence are intentionally left to the host app.
+[![JSR](https://jsr.io/badges/@4everlabs/tree)](https://jsr.io/@4everlabs/tree)
+[![JSR Score](https://jsr.io/badges/@4everlabs/tree/score)](https://jsr.io/@4everlabs/tree)
+[![JSR Weekly Downloads](https://jsr.io/badges/@4everlabs/tree/weekly-downloads)](https://jsr.io/@4everlabs/tree)
 
-## Install
+Official React components for rendering interactive family trees with relationship-aware connectors. Data fetching and persistence are intentionally left to the host app.
 
-```bash
-bun add @4everlabs/tree
-```
-
-```bash
-npm install @4everlabs/tree
-```
-
-## Publish (JSR + Bun)
-
-Configure `jsr.json` with `name`, `version`, `license`, and `exports`, then publish:
+## Install (Bun + JSR)
 
 ```bash
-bunx jsr publish
+bunx jsr add @4everlabs/tree
 ```
-
-If the CLI asks for a token, create one in the JSR web UI and pass it via `--token` or `JSR_TOKEN`.
 
 ## Quick Start
 
@@ -63,32 +53,46 @@ export function FamilyTreePage() {
 }
 ```
 
-## API
+## Data Model
 
-FamilyTree props:
-- `rootMember`: Tree data rooted at the current profile.
-- `title`: Heading text. Defaults to `Family Tree`.
-- `canEdit`: Enables add-member UI.
-- `onAddMember`: Called when the dialog submits.
-- `searchProfiles`: Async search provider for the dialog.
-- `onNavigateProfile`: Called when a card with a profile ID or slug is clicked.
-- `resolveAvatarUrl`: Optional URL resolver for avatar images.
-- `designPreset`: `default`, `compact`, or `contrast`.
-- `designOverrides`: Override connector sizing and colors.
+Tree structure is driven by nested arrays on `FamilyMember`:
 
-Exports:
-- Components: `FamilyTree`, `FamilyNodeCard`, `AddMemberDialog`
-- Presets: `familyTreePresets`, `getFamilyTreeConfig`
-- Types: `FamilyMember`, `RelationType`, `AddMemberPayload`, `FamilyTreeConnectorConfig`, `FamilyTreePresetName`
+- `parents`: Array of direct parents for the member.
+- `siblings`: Array of direct siblings for the member.
+- `children`: Array of direct children for the member.
+- `spouse`: The member’s partner (single spouse supported in layout).
 
-## Presets
+The `relation` field is used for labeling cards. Layout is derived from `parents`, `siblings`, `children`, and `spouse`.
 
-Available presets:
-- `default`
-- `compact`
-- `contrast`
+## Relationship Line Rules
 
-Override a preset:
+Connector placement is deterministic and consistent across presets:
+
+- `spouse`: The partner line connects at **mid‑height** on each card’s **inner edge** (left/right), inset by `anchors.coupleInsetPx`.
+- `parent → child` (couple): A **junction** is placed at the midpoint of the couple line. A vertical **trunk** drops from that junction to a horizontal **sibling bus** above the children. Each child connects **from the top center** of their card down to that bus.
+- `parent → child` (single parent): The junction is the **bottom center** of the parent card. The same trunk + sibling bus + child drops apply.
+- `siblings`: Siblings are connected through the **shared sibling bus** above them; each sibling drops to the bus at their **top center**.
+
+To model grandparents or grandchildren, represent them as additional `parents` or `children` on the appropriate member; the connector rules remain the same.
+
+## Add Member Workflow
+
+When `canEdit` is true, the UI emits an `AddMemberPayload` with one of these shapes:
+
+- `type: "existing"`: User selected from search results.
+- `type: "manual"`: Manual entry (name, optional birthday).
+- `type: "invite"`: Invite by email.
+
+Your app is responsible for persistence and updating the tree data after a successful add.
+
+## Customization
+
+Use presets or overrides to control connector styling:
+
+- `designPreset`: `default`, `compact`, `contrast`.
+- `designOverrides`: Partial override of `FamilyTreeConnectorConfig`.
+
+Example override:
 
 ```tsx
 import { getFamilyTreeConfig } from "@4everlabs/tree";
@@ -106,10 +110,6 @@ const config = getFamilyTreeConfig("compact", {
 ## Styling
 
 This library ships Tailwind class names, including design tokens like `bg-stroke-default` and `text-copy-primary`. Ensure your design system defines these classes or replace them to match your UI.
-
-## Notes
-
-This package ships compiled output from `tsup` into `dist/`.
 
 ## License
 

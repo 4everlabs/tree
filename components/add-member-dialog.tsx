@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Check, Loader2, Mail, Search, X } from "lucide-react";
 
 import { cn, getInitials } from "../utils";
@@ -105,7 +105,7 @@ export function AddMemberDialog({
     };
   }, [debouncedQuery, searchProfiles]);
 
-  const suggestions = useMemo(() => searchResults, [searchResults]);
+  const suggestions = searchResults;
 
   // Reset state when dialog opens/closes
   useEffect(() => {
