@@ -1,3 +1,6 @@
+/**
+ * Supported relationship kinds between family members.
+ */
 export type RelationType =
   | "parent"
   | "sibling"
@@ -6,8 +9,14 @@ export type RelationType =
   | "grandparent"
   | "grandchild";
 
+/**
+ * Status for how a family member was added or linked.
+ */
 export type FamilyMemberStatus = "linked" | "manual" | "invite_pending";
 
+/**
+ * Core data model for a member displayed in the family tree.
+ */
 export interface FamilyMember {
   id: string;
   name: string;
@@ -29,6 +38,9 @@ export interface FamilyMember {
   spouse?: FamilyMember;
 }
 
+/**
+ * Input data used for manual member creation.
+ */
 export interface AddMemberData {
   name: string;
   birthday?: string;
@@ -38,6 +50,9 @@ export interface AddMemberData {
   avatarUrl?: string | null;
 }
 
+/**
+ * Result shape returned by the profile search callback.
+ */
 export interface ProfileSearchResult {
   profileId: string;
   ownerUserId?: string;
@@ -47,6 +62,9 @@ export interface ProfileSearchResult {
   visibility?: string | null;
 }
 
+/**
+ * Payload emitted when a user adds a member to the tree.
+ */
 export type AddMemberPayload =
   | {
       relation: RelationType;
@@ -72,15 +90,27 @@ export type AddMemberPayload =
       email: string;
     };
 
+/**
+ * Alias of `RelationType` retained for compatibility.
+ */
 export type FamilyRelationshipType = RelationType;
 
+/**
+ * Coerce a `RelationType` into a `FamilyRelationshipType`.
+ */
 export function mapToFamilyRelationType(relation: RelationType): FamilyRelationshipType {
   return relation;
 }
 
 // Connector design config for lines/anchors.
+/**
+ * Built-in connector style presets.
+ */
 export type FamilyTreePresetName = "default" | "compact" | "contrast";
 
+/**
+ * Status-to-color class mapping used by connectors.
+ */
 export interface FamilyTreeStatusColors {
   linked: string;
   invite_pending: string;
@@ -88,11 +118,17 @@ export interface FamilyTreeStatusColors {
   default: string;
 }
 
+/**
+ * Style tokens describing a connector line.
+ */
 export interface FamilyTreeLineStyle {
   thickness: string;
   colorClass: string;
 }
 
+/**
+ * Full configuration for connector rendering.
+ */
 export interface FamilyTreeConnectorConfig {
   statusColors: FamilyTreeStatusColors;
   coupleLine: FamilyTreeLineStyle;
@@ -103,4 +139,16 @@ export interface FamilyTreeConnectorConfig {
     coupleInsetPx: number;
     verticalGapPx: number;
   };
+}
+
+/**
+ * Render options provided to a custom node renderer.
+ */
+export interface FamilyTreeRenderNodeOptions {
+  isRoot: boolean;
+  canEdit: boolean;
+  onAddMember: (relation: RelationType, parentId: string) => void;
+  onNavigateProfile?: (member: FamilyMember, target: string) => void;
+  resolveAvatarUrl?: (url?: string | null) => string;
+  relationOptions: RelationType[];
 }

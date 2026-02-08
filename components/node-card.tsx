@@ -14,6 +14,7 @@ interface FamilyNodeCardProps {
   resolveAvatarUrl?: (url?: string | null) => string;
   isRoot?: boolean;
   canEdit?: boolean;
+  relationOptions?: RelationType[];
 }
 
 const relationLabels: Record<RelationType, string> = {
@@ -30,6 +31,9 @@ const avatarLg = {
   className: "h-14 w-14",
 };
 
+/**
+ * Display a single family member with relationship actions.
+ */
 export function FamilyNodeCard({
   member,
   onAddMember,
@@ -43,7 +47,12 @@ export function FamilyNodeCard({
   const [menuCoords, setMenuCoords] = useState<{ top: number; left: number } | null>(null);
   const menuButtonRef = useRef<HTMLButtonElement | null>(null);
 
-  const relationOptions: RelationType[] = isRoot ? ["parent", "sibling", "spouse", "child"] : ["child"];
+  const resolvedRelationOptions: RelationType[] =
+    relationOptions && relationOptions.length > 0
+      ? relationOptions
+      : isRoot
+        ? ["parent", "sibling", "spouse", "child"]
+        : ["child"];
   const showOverlay = canEdit && (isHovered || isMenuOpen);
   const profileTarget = (member.profileSlug?.trim() || member.profileId || "").toString().trim();
   const canNavigate = Boolean(profileTarget) && Boolean(onNavigateProfile);
@@ -146,29 +155,29 @@ export function FamilyNodeCard({
           {/* Name & Info */}
           <div className="w-full space-y-1">
             <p className="font-semibold text-base truncate text-copy-primary">{member.name}</p>
-            {member.birthday && (
+            {member.birthday ? (
               <p className="text-sm text-copy-muted">Born {member.birthday}</p>
-            )}
-            {member.relation && !isRoot && (
+            ) : null}
+            {member.relation && !isRoot ? (
               <p className="type-caption text-copy-disabled uppercase tracking-wider">
                 {relationLabels[member.relation] || member.relation}
               </p>
-            )}
-            {isRoot && (
+            ) : null}
+            {isRoot ? (
               <p className="type-caption text-copy-disabled uppercase tracking-wider">You</p>
-            )}
-            {member.status === "linked" && (
+            ) : null}
+            {member.status === "linked" ? (
               <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-canvas-base rounded-full text-xs text-copy-muted">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
                 Linked
               </span>
-            )}
-            {member.status === "invite_pending" && (
+            ) : null}
+            {member.status === "invite_pending" ? (
               <span className="inline-flex items-center gap-2 px-3 py-1 bg-yellow-50 border border-yellow-200 rounded-full text-xs font-medium text-yellow-800">
                 <Mail className="w-3 h-3" />
                 Invite sent
               </span>
-            )}
+            ) : null}
           </div>
         </div>
       </div>
@@ -196,7 +205,7 @@ export function FamilyNodeCard({
                 stopCardNavigation(event);
                 handleSelectRelation(relation);
               }}
-              relationOptions={relationOptions}
+              relationOptions={resolvedRelationOptions}
               menuCoords={menuCoords}
               menuButtonRef={menuButtonRef}
             />
@@ -239,8 +248,7 @@ function RelationMenu({
           <Plus className="w-4 h-4" />
           <span className="sr-only">Add family member</span>
         </button>
-        {isOpen && menuCoords
-          ? createPortal(
+        {isOpen && menuCoords ? createPortal(
             <div
               className="fixed w-44 -translate-x-1/2 overflow-hidden rounded-xl border border-stroke-default bg-bg shadow-lg z-(--z-popover)"
               style={{ top: menuCoords.top, left: menuCoords.left }}
@@ -258,8 +266,7 @@ function RelationMenu({
               ))}
             </div>,
             document.body,
-          )
-          : null}
+          ) : null}
       </div>
     </div>
   );

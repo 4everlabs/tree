@@ -85,12 +85,18 @@ const contrastPreset: FamilyTreeConnectorConfig = {
   },
 };
 
+/**
+ * Built-in connector presets keyed by `FamilyTreePresetName`.
+ */
 export const familyTreePresets: Record<FamilyTreePresetName, FamilyTreeConnectorConfig> = {
   default: defaultPreset,
   compact: compactPreset,
   contrast: contrastPreset,
 };
 
+/**
+ * Merge a preset with optional overrides to produce a connector config.
+ */
 export function getFamilyTreeConfig(
   preset: FamilyTreePresetName = "default",
   override?: Partial<FamilyTreeConnectorConfig>,

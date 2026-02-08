@@ -1,3 +1,8 @@
+/**
+ * Public entrypoint for the Family Tree UI package.
+ * Re-exports core types, design presets, and React components.
+ */
+
 // Types
 export type {
   FamilyMember,
@@ -9,6 +14,7 @@ export type {
   AddMemberPayload,
   FamilyTreeConnectorConfig,
   FamilyTreePresetName,
+  FamilyTreeRenderNodeOptions,
 } from "./types";
 export { familyTreePresets, getFamilyTreeConfig } from "./design-presets";
 export { mapToFamilyRelationType } from "./types";

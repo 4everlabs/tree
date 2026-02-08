@@ -47,6 +47,9 @@ const avatarLg = {
   className: "h-14 w-14",
 };
 
+/**
+ * Modal dialog for adding or inviting a new family member.
+ */
 export function AddMemberDialog({
   isOpen,
   onClose,
@@ -318,7 +321,7 @@ export function AddMemberDialog({
                     </div>
 
                     {/* Search Results */}
-                    {searchQuery.trim() && (
+                    {searchQuery.trim() ? (
                       <div className="max-h-64 overflow-y-auto rounded-2xl border border-stroke-muted bg-bg divide-y divide-stroke-muted">
                         {isSearching ? (
                           <div className="p-4 text-center text-copy-muted">Searching...</div>
@@ -372,7 +375,7 @@ export function AddMemberDialog({
                           ))
                         )}
                       </div>
-                    )}
+                    ) : null}
 
                     {/* Hint to switch to manual */}
                     <p className="text-center text-sm text-copy-muted">
@@ -495,7 +498,7 @@ export function AddMemberDialog({
               disabled={!canSubmit || isSubmitting}
               className="flex-1 py-3 px-4 rounded-full bg-copy-primary text-bg font-medium hover:bg-copy-secondary transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
+              {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
               Add {relationLabels[relation]}
             </button>
           </div>
